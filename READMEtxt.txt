@@ -7,7 +7,7 @@ Member 1: [Name] - Engine & Game Loop
 Member 2: [Name] - Player Character & Controls
 Member 3: [Name] - Level Design & Environment
 Member 4: [Name] - Enemy Systems
-Member 5: [Name] - UI & Visual Effects
+Member 5: [Ali Alharmoodi] - UI & Visual Effects
 
 
 Timeline: March 12 - March 28, 2025
