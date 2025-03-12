@@ -1,0 +1,47 @@
+Bedouin Madness - Game Description
+
+Bedouin Madness is a fast-paced, side-scrolling platformer set in a treacherous desert landscape. Players control a nimble Bedouin warrior who must navigate through ten increasingly challenging levels while avoiding deadly creatures and hazardous terrain.
+
+Story
+A skilled Bedouin warrior embarks on a perilous journey across the scorching desert to reach the sacred oasis. Ancient legends speak of riches and wisdom awaiting those brave enough to complete this treacherous pilgrimage.
+
+Gameplay
+The player starts with three hearts and must reach the end of each level as quickly as possible. Moving platforms, shifting sand dunes, and deadly quicksand pits create challenging platforming sequences. The faster a player completes a level, the higher their score - with a maximum of 10 points available per level.
+
+Environment
+The game features a striking desert aesthetic with:
+
+Sprawling sand dunes
+Spiky cacti and palm trees
+Desert rock formations
+Shimmering mirages
+A blazing sun overhead
+
+Enemies
+The desert is home to dangerous creatures:
+
+Scorpions that scuttle across the sand
+Vultures that swoop down from above
+Venomous snakes that lunge unexpectedly
+
+Progression
+As players advance through the ten levels, they face:
+
+More complex jumping challenges
+Faster and more numerous enemies
+Trickier environmental hazards
+Narrower platforms and precise timing requirements
+
+Scoring
+
+Players earn points based on completion speed
+1 second = 9 points
+3 seconds = 7 points
+10 seconds = 1 point (minimum)
+Maximum possible score across all levels: 100 points
+
+Victory and Defeat
+Players win by completing all ten levels. If all three hearts are lost, the game ends in defeat. The final score represents the player's mastery of both speed and survival skills.
+
+Controls
+Intuitive controls allow players to run, jump, and navigate the perilous desert with precision and agility as they race against time to maximize their score

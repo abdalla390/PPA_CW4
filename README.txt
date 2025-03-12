@@ -3,10 +3,10 @@ Project Overview
 Game Name: Bedouin Madness
 Team Members:
 
-Member 1: [Hussain Bin Ali Bin Hussain Albeshri] - Engine & Game Loop
+Member 1: [Hussain] - Engine & Game Loop
 Member 2: [Abdalla] - Player Character & Controls
 Member 3: [Abdelrahman] - Level Design & Environment
-Member 4: [MO] - Enemy Systems
+Member 4: [Mohammed] - Enemy Systems
 Member 5: [Ali Alharmoodi] - UI & Visual Effects
 
 
