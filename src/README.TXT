@@ -8,5 +8,5 @@ PROJECT TITLE: Bedou Madness
 PURPOSE OF PROJECT: Create a Vector Game
 VERSION or DATE: 1.0
 HOW TO START THIS PROJECT:
-AUTHORS: Abdalla, Ali, Mohamed & Hussain
+AUTHORS: Abdalla, Ali, Mohammed, Hussain, and Abdulrahman
 USER INSTRUCTIONS:
