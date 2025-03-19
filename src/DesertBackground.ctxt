@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=DesertBackground
+comment1.params=deltaTime
+comment1.target=void\ update(double)
+comment2.params=gc
+comment2.target=void\ render(javafx.scene.canvas.GraphicsContext)
+numComments=3

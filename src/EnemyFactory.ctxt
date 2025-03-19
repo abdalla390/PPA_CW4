@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=EnemyFactory
+comment1.params=x\ y
+comment1.target=Enemy\ createScorpion(double,\ double)
+comment2.params=x\ y
+comment2.target=Enemy\ createVulture(double,\ double)
+comment3.params=x\ y
+comment3.target=Enemy\ createSnake(double,\ double)
+comment4.params=levelNumber\ x\ y
+comment4.target=Enemy\ createEnemyForLevel(int,\ double,\ double)
+numComments=5

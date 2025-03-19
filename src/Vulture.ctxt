@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=Vulture
+comment1.params=x\ y
+comment1.target=Vulture(double,\ double)
+comment2.params=deltaTime
+comment2.target=void\ update(double)
+comment3.params=gc
+comment3.target=void\ render(javafx.scene.canvas.GraphicsContext)
+comment4.params=
+comment4.target=void\ attack()
+numComments=5
