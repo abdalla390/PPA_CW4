@@ -35,9 +35,9 @@ Narrower platforms and precise timing requirements
 Scoring
 
 Players earn points based on completion speed
-1 second = 9 points
-3 seconds = 7 points
-10 seconds = 1 point (minimum)
+5 second = 9 points
+15 seconds = 7 points
+25+ seconds = 1 point (minimum)
 Maximum possible score across all levels: 100 points
 
 Victory and Defeat
