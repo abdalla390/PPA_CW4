@@ -1,12 +1,12 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DesertBackground extends GameObject {
-    public DesertBackground(double x, double y, double width, double height) {
+public class Flag extends GameObject {
+    public Flag(double x, double y) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.width = 50;
+        this.height = 100;
         this.isActive = true;
     }
     
@@ -16,7 +16,7 @@ public class DesertBackground extends GameObject {
     
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(Color.BURLYWOOD);
+        gc.setFill(Color.GOLD);
         gc.fillRect(x, y, width, height);
     }
 }

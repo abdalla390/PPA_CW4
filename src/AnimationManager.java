@@ -1,25 +1,22 @@
-import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * Write a description of class AnimationManager here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
 public class AnimationManager {
     public static void createPlayerJumpAnimation(Player player) {
-        // Member 2’s responsibility, placeholder
+        // Create and play jump animation
     }
-
+    
     public static void createEnemyAttackAnimation(Enemy enemy) {
-        // Simple flash effect for attack
-        new javafx.animation.Timeline(
-            new javafx.animation.KeyFrame(
-                javafx.util.Duration.millis(200),
-                e -> enemy.setInactive() // Temporary disable for visibility
-            ),
-            new javafx.animation.KeyFrame(
-                javafx.util.Duration.millis(400),
-                e -> enemy.setInactive() // Reset
-            )
-        ).play();
+        // Create and play attack animation
     }
-
+    
     public static void createDeathAnimation(GameObject object) {
-        // Placeholder for death effect
+        // Create and play death animation
     }
+    
+    // Other animation creation methods
 }
