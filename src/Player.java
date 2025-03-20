@@ -72,23 +72,24 @@ public class Player extends GameObject {
     private void renderIdlePlayer(GraphicsContext gc, Color tanColor, Color blackColor, Color redColor, Color whiteColor) {
         // Head
         gc.setFill(tanColor);
-        gc.fillRect(x + 10, y - 80, 70, 80);
+        gc.fillRect(x + 10, y - 80, 50, 80);
         
         // Body
         gc.setFill(whiteColor);
-        gc.fillRect(x + 11, y - 10, 70, 125);
+        gc.fillRect(x + 11, y - 10, 50, 105);
         
         // Headscarf
         gc.setFill(redColor);
         gc.fillRect(x + 9, y - 80, 12, 80);
-        gc.fillRect(x + 9, y - 80, 80, 12);
+        gc.fillRect(x + 9, y - 80, 60, 12);
         
         
         // Eye
         gc.setFill(blackColor);
-        gc.fillRect(x + 10, y - 88, 80, 8);
+        gc.fillRect(x + 10, y - 88, 60, 8);
         gc.fillOval(x + 12, y + 3, 2, 2);
         
     }
+    
     
 }
