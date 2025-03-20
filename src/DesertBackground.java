@@ -1,18 +1,22 @@
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-/**
- * Write a description of class DesertBackground here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
 public class DesertBackground {
-    private double scrollOffset;
-    
+    private double scrollOffset = 0;
+
     public void update(double deltaTime) {
-        // Update background scroll position
+        scrollOffset -= 50 * deltaTime; // Slow scroll for parallax
+        if (scrollOffset < -1280) scrollOffset = 0; // Loop background
     }
-    
+
     public void render(GraphicsContext gc) {
-        // Render desert background with parallax layers
+        // Sand color background
+        gc.setFill(Color.valueOf("#F4A460")); // Sandy brown
+        gc.fillRect(0, 0, 1280, 720);
+
+        // Simple dunes (static for now)
+        gc.setFill(Color.valueOf("#CD853F")); // Darker sand
+        gc.fillOval(scrollOffset, 500, 600, 300);
+        gc.fillOval(scrollOffset + 800, 550, 500, 200);
     }
 }
