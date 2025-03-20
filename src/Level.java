@@ -13,5 +13,9 @@ public class Level {
         // Return all level objects for collision checking
     }
     
+    public void update(double deltaTime) {
+        // Update player position, state, etc.
+    }
+    
     // Level-specific methods
 }
