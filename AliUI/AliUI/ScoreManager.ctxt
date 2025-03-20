@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=ScoreManager
+comment1.params=
+comment1.target=ScoreManager()
+comment2.params=
+comment2.target=void\ startLevelTimer()
+comment3.params=now
+comment3.target=void\ handle(long)
+comment4.params=
+comment4.target=int\ finalizeLevelScore()
+comment5.params=
+comment5.target=int\ getTotalScore()
+comment6.params=
+comment6.target=int\ getCurrentScore()
+numComments=7

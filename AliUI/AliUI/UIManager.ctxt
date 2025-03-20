@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=UIManager
+comment1.params=scoreManager
+comment1.target=UIManager(ScoreManager)
+comment2.params=
+comment2.target=javafx.scene.control.MenuBar\ createMenuBar()
+comment3.params=
+comment3.target=javafx.scene.layout.VBox\ createHUD()
+comment4.params=now
+comment4.target=void\ handle(long)
+comment5.params=score
+comment5.target=void\ updateScore(int)
+comment6.params=health
+comment6.target=void\ updateHearts(int)
+comment7.params=isWin\ finalScore
+comment7.target=void\ showGameOverDialog(boolean,\ int)
+comment8.params=
+comment8.target=void\ showAboutDialog()
+numComments=9
