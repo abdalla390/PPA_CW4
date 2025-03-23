@@ -15,7 +15,6 @@ class EnemyFactory {
         return new Snake(x, y);
     }
 
-    // Method to create enemies based on level
     public Enemy createEnemyForLevel(int levelNumber, double x, double y) {
         if (levelNumber <= 3) {
             return createScorpion(x, y);
