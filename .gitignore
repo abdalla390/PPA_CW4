@@ -1,3 +1,4 @@
-*.class
-*.ctxt
-*.log
+src/*.class
+src/*.ctxt
+src/*.log
+src/package.bluej
