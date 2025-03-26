@@ -12,14 +12,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-public class OptimizedBedouinMadnessGame extends Application {
+public class BedouinMadnessGame extends Application {
     private GameEngine gameEngine;
     private GameView gameView;
     private UIManager uiManager;
     private InputHandler inputHandler;
-    
-    // Debug mode flag
-    private boolean debugMode = false;
     
     @Override
     public void start(Stage stage) {
@@ -40,25 +37,11 @@ public class OptimizedBedouinMadnessGame extends Application {
         // Connect GameView to GameEngine
         gameView.setGameEngine(gameEngine);
         
-        // Set debug mode
-        gameEngine.setDebugMode(debugMode);
-        gameView.setDebugMode(debugMode);
         
         // Setup layout
         BorderPane root = new BorderPane();
         root.setTop(uiManager.createMenuBar());
         
-        // Debug controls - only visible in development
-        HBox debugControls = new HBox(10);
-        debugControls.setStyle("-fx-background-color: #333333; -fx-padding: 5px;");
-        CheckBox debugCheckbox = new CheckBox("Debug Mode");
-        debugCheckbox.setTextFill(javafx.scene.paint.Color.WHITE);
-        debugCheckbox.setSelected(debugMode);
-        debugCheckbox.setOnAction(e -> {
-            debugMode = debugCheckbox.isSelected();
-            gameEngine.setDebugMode(debugMode);
-            gameView.setDebugMode(debugMode);
-        });
         
         Button gcButton = new Button("Force GC");
         gcButton.setOnAction(e -> System.gc());
@@ -66,23 +49,8 @@ public class OptimizedBedouinMadnessGame extends Application {
         Label memoryLabel = new Label("Memory: ");
         memoryLabel.setTextFill(javafx.scene.paint.Color.WHITE);
         
-        debugControls.getChildren().addAll(debugCheckbox, gcButton, memoryLabel);
-        
-        // Optional: Memory usage display
-        new javafx.animation.AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (debugMode) {
-                    Runtime rt = Runtime.getRuntime();
-                    long usedMB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
-                    memoryLabel.setText(String.format("Memory: %d MB", usedMB));
-                }
-            }
-        }.start();
-        
         // Create VBox for HUD at the top of the center area
         VBox centerVBox = new VBox();
-        if (debugMode) centerVBox.getChildren().add(debugControls);
         centerVBox.getChildren().addAll(uiManager.createHUD(1), canvas);
         VBox.setVgrow(canvas, Priority.ALWAYS);
         
@@ -105,7 +73,7 @@ public class OptimizedBedouinMadnessGame extends Application {
         gameEngine.setInputHandler(inputHandler);
         
         // Configure stage
-        stage.setTitle("Bedouin Madness (Optimized)");
+        stage.setTitle("Bedouin Madness");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
@@ -158,15 +126,15 @@ public class OptimizedBedouinMadnessGame extends Application {
         titleLabel.setTextFill(javafx.scene.paint.Color.WHITE);
         
         Label controlsLabel = new Label(
-            "Controls:\n" +
+            "      -Controls-\n" +
             "Move Left: ← or A\n" +
             "Move Right: → or D\n" +
-            "Jump: SPACE"
+            "Jump: SPACE or  ↑ or W"
         );
         controlsLabel.setTextFill(javafx.scene.paint.Color.WHITE);
         
         Label objectiveLabel = new Label(
-            "Objective: Guide your ninja through the desert levels, " +
+            "Objective: Guide your Bedouin ninja through the desert levels, " +
             "avoid enemies and obstacles, and reach the golden flag at the end of each level."
         );
         objectiveLabel.setWrapText(true);

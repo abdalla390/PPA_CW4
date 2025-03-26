@@ -3,16 +3,24 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.List;
 
+/**
+ * Game View class defining and drawing the game content.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
 public class GameView {
     private Canvas gameCanvas;
     private GraphicsContext gc;
     private GameEngine gameEngine;
     private Camera camera;
     
-    // Performance optimization
-    private boolean debugMode = false;
-    private long frameCount = 0;
-
+    /**
+     * The GameView Constructor defining the canvans and engine of the game.
+     * 
+     * @param canvas The canvas of the game where the game content to be draw on.
+     * @param engine The engine of the game where all the contents of the game are called from.
+     */
     public GameView(Canvas canvas, GameEngine engine) {
         this.gameCanvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
@@ -20,20 +28,34 @@ public class GameView {
         this.camera = new Camera(canvas.getWidth(), canvas.getHeight());
     }
     
+    
+     /**
+     * Sets the game engine reference.
+     * Used when the game engine is created after the view.
+     * 
+     * @param engine The game engine to associate with this view.
+     */
     public void setGameEngine(GameEngine engine) {
         this.gameEngine = engine;
     }
     
+    /**
+     * Gets the camera object used for view transformations.
+     * 
+     * @return The camera instance used by this view.
+     */
     public Camera getCamera() {
         return camera;
     }
     
-    public void setDebugMode(boolean debug) {
-        this.debugMode = debug;
-    }
-
+     /**
+     * Renders the game world onto the canvas.
+     * Clears the canvas, updates camera position to follow the player,
+     * applies camera transformation, renders the background with parallax,
+     * and draws only the visible game objects for better performance.
+     * Also draws debug information when debug mode is enabled.
+     */
     public void render() {
-        frameCount++;
         
         if (gameEngine == null) return;
         
@@ -76,14 +98,16 @@ public class GameView {
         // Restore the original state
         gc.restore();
         
-        // Draw debug info if enabled
-        if (debugMode && frameCount % 30 == 0) { // Only every 30 frames
-            gc.setFill(Color.WHITE);
-            gc.fillText("Camera: " + (int)camera.getX() + ", Player: " + (int)player.getX() + 
-                      ", Objects: " + visibleObjects.size(), 10, 20);
-        }
     }
     
+    /**
+     * Draws the background with a parallax scrolling effect.
+     * Creates a layered background with sky, distant mountains that move slower
+     * than the player (parallax), and a ground section that moves with the camera.
+     * The parallax effect creates a sense of depth in the 2D world.
+     * 
+     * @param level The current level being rendered.
+     */
     private void drawBackground(Level level) {
         // Use a more efficient background rendering method
         

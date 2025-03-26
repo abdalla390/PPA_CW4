@@ -2,6 +2,17 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.List;
 
+
+/**
+ * The core engine responsible for running the game loop and managing game state.
+ * Handles initialization, updates, collision detection, player death,
+ * level advancement, and game state transitions. Serves as the central
+ * coordinator between various game components.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
+
 public class GameEngine {
     private AnimationTimer gameLoop;
     private Player player;
@@ -14,7 +25,16 @@ public class GameEngine {
     private boolean isPaused = false;
     private boolean debugMode = false;
     private long lastUpdate = 0;
-
+    
+    /**
+     * Constructs a new game engine with the specified components.
+     * Links the engine to the UI, score system, graphics context, and view.
+     * 
+     * @param uiManager The manager for user interface elements.
+     * @param scoreManager The manager for tracking and calculating score.
+     * @param gc The graphics context for rendering.
+     * @param gameView The view component for displaying the game.
+     */
     public GameEngine(UIManager uiManager, ScoreManager scoreManager, GraphicsContext gc, GameView gameView) {
         this.uiManager = uiManager;
         this.scoreManager = scoreManager;
@@ -22,8 +42,12 @@ public class GameEngine {
         this.gameView = gameView;
     }
 
+     /**
+     * Initializes the game state for a new game.
+     * Creates the player, first level, and starts the score timer.
+     * Updates UI elements to reflect the initial state.
+     */
     public void initializeGame() {
-        DebugLogger.init(); // Initialize logging
         player = new Player(100, 570);
         currentLevel = LevelFactory.createLevel(1);
         player.setLevelBounds(currentLevel.getLevelWidth());
@@ -33,7 +57,13 @@ public class GameEngine {
         uiManager.updateScore(scoreManager.getCurrentScore());
         startGameLoop();
     }
-
+    
+    
+    /**
+     * Starts the main game loop using JavaFX AnimationTimer.
+     * The loop handles input processing, game state updates,
+     * and rendering at appropriate intervals.
+     */
     private void startGameLoop() {
         gameLoop = new AnimationTimer() {
             @Override
@@ -41,7 +71,7 @@ public class GameEngine {
                 if (isPaused) return;
 
                 if (lastUpdate == 0) lastUpdate = now;
-                double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert to seconds
+                double deltaTime = (now - lastUpdate) / 1_000_000_000.0; 
                 lastUpdate = now;
 
                 inputHandler.processInput();
@@ -52,26 +82,33 @@ public class GameEngine {
         gameLoop.start();
     }
 
+    /**
+     * Updates the game state for each frame.
+     * Handles player and level updates, collision detection,
+     * UI updates, and transitions between gameplay states.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds.
+     */
     private void update(double deltaTime) {
         if (player.isActive()) {
             player.update(deltaTime);
-            currentLevel.updateEfficiently(deltaTime, player.getX(), 1280); // Update near player
+            currentLevel.updateEfficiently(deltaTime, player.getX(), 1280);
             handleCollisions();
             uiManager.updateScore(scoreManager.getCurrentScore());
         } else if (player.isDying()) {
-            player.update(deltaTime); // Let death animation play
+            player.update(deltaTime); 
         } else if (!player.isActive() && !player.isDying()) {
-            // Player is fully dead (animation complete)
+            
             pauseGame();
             handlePlayerDeath();
         }
-
-        if (debugMode && System.currentTimeMillis() % 1000 < 50) { // Log every second
-            DebugLogger.logPlayerState(player);
-            DebugLogger.logMemoryUsage();
-        }
     }
-
+    
+    /**
+     * Handles all collision detection between the player and game objects.
+     * Processes interactions with enemies, obstacles, coins, and level completion flags.
+     * Triggers appropriate actions based on collision types.
+     */
     private void handleCollisions() {
         List<GameObject> nearbyObjects = currentLevel.getObjectsNearPlayer(player.getX(), 1280);
         for (GameObject obj : nearbyObjects) {
@@ -104,8 +141,12 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Handles the player death sequence.
+     * Determines remaining hearts, displays the appropriate dialog,
+     * and sets up continuation or game over based on player status.
+     */
     private void handlePlayerDeath() {
-        DebugLogger.log("Handling player death");
         // Get current health to determine remaining hearts
         int remainingHearts = player.getHealth() - 1;
         AnimationManager.cleanupAllAnimations(); // Prevent animation-related freezes
@@ -113,57 +154,74 @@ public class GameEngine {
         if (remainingHearts > 0) {
             // Show death dialog with remaining hearts
             javafx.application.Platform.runLater(() -> {
-                DebugLogger.log("Showing death dialog, hearts remaining: " + remainingHearts);
                 uiManager.showDeathDialog(remainingHearts, 
                     () -> {
-                        DebugLogger.log("Death dialog: Continue selected");
                         resetPlayer();
                         resumeGame();
                     }, 
                     () -> {
-                        DebugLogger.log("Death dialog: Quit selected");
                         showGameOver(false);
                     });
             });
         } else {
-            DebugLogger.log("No hearts remaining, showing game over");
             showGameOver(false);
         }
     }
 
-    private void resetPlayer() {
+    
+    // Modified resetPlayer method with optional health parameter
+    private void resetPlayer(float healthValue) {
         player = new Player(100, 570);
         player.setLevelBounds(currentLevel.getLevelWidth());
+        // Set the health to the provided value instead of using default
+        player.setHealth(healthValue);
         inputHandler.setPlayer(player);
         scoreManager.applyDamagePenalty();
         uiManager.updateHearts(player.getHealth());
         uiManager.updateScore(scoreManager.getCurrentScore());
     }
 
+     /**
+     * Resets the player to the starting position with current health.
+     * Called after death if the player has remaining hearts.
+     * Applies score penalties and updates UI accordingly.
+     */
+    private void resetPlayer() {
+        resetPlayer(3.0f);
+    }
+    
+    /**
+     * Advances the game to the next level after completing the current one.
+     * Calculates level score, creates a new level, resets player position,
+     * and updates UI elements for the new level.
+     */
     private void advanceToNextLevel() {
         int levelScore = scoreManager.calculateLevelScore();
         currentLevel = LevelFactory.createLevel(currentLevel.getLevelNumber() + 1);
-        resetPlayer();
+        float currentHealth = player.getHealth();
+        resetPlayer(currentHealth);
         player.setLevelBounds(currentLevel.getLevelWidth());
         scoreManager.startLevelTimer();
         uiManager.updateLevel(currentLevel.getLevelNumber());
         uiManager.updateScore(scoreManager.getCurrentScore());
     }
 
+    /**
+     * Displays the game over screen with final score and outcome.
+     * Shows different UI based on whether the player won or lost.
+     * 
+     * @param isWin True if the player completed all levels, false if they died.
+     */
+    
     private void showGameOver(boolean isWin) {
-        DebugLogger.log("Showing game over. isWin: " + isWin);
         
-        // Get the final score (including current level uncollected points)
         int finalScore = scoreManager.getFinalScore();
         if (isWin) {
-            // If winning, calculate level score with time bonus
+            
             scoreManager.calculateLevelScore();
             finalScore = scoreManager.getTotalScore();
         }
         
-        DebugLogger.log("Final score for game over screen: " + finalScore);
-        
-        // Capture variables for lambda
         final int scoreToShow = finalScore;
         
         javafx.application.Platform.runLater(() -> {
@@ -172,15 +230,28 @@ public class GameEngine {
         });
     }
 
+    /**
+     * Pauses the game loop.
+     * Stops updates and rendering until the game is resumed.
+     */
     public void pauseGame() {
         isPaused = true;
     }
 
+    /**
+     * Resumes the game loop after it has been paused.
+     * Resets the delta time counter to prevent large jumps.
+     */
     public void resumeGame() {
         isPaused = false;
         lastUpdate = 0; // Reset delta time
     }
 
+    /**
+     * Completely resets the game to its initial state.
+     * Clears all game progress, score, and animations.
+     * Creates a fresh game state ready to be played.
+     */
     public void resetGame() {
         pauseGame();
         AnimationManager.cleanupAllAnimations();
@@ -203,6 +274,10 @@ public class GameEngine {
         resumeGame();
     }
 
+    /**
+     * Cleans up resources when the game is shutting down.
+     * Stops the game loop, cleans up animations, and releases level resources.
+     */
     public void kill() {
         if (gameLoop != null) {
             gameLoop.stop();
@@ -213,18 +288,29 @@ public class GameEngine {
         }
     }
 
-    public void setDebugMode(boolean debug) {
-        this.debugMode = debug;
-    }
-
+    /**
+     * Sets the input handler for this game engine.
+     * 
+     * @param handler The input handler that will process user input.
+     */
     public void setInputHandler(InputHandler handler) {
         this.inputHandler = handler;
     }
 
+    /**
+     * Gets the current player object.
+     * 
+     * @return The player instance being used in the game.
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Gets the current level object.
+     * 
+     * @return The level instance currently active in the game.
+     */
     public Level getCurrentLevel() {
         return currentLevel;
     }

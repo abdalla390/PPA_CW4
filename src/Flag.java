@@ -1,29 +1,61 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * Represents the completion flag that marks the end of a level.
+ * When the player collides with this flag, the level is considered
+ * complete and the player advances to the next level. The flag
+ * features an animated waving effect to attract player attention.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
 public class Flag extends GameObject {
     private double waveTime = 0;
-    private final double waveSpeed = 2.0; // Speed of flag waving
     
+    private final double waveSpeed = 2.0;
+    
+    /**
+     * Constructs a new flag at the specified location.
+     * The flag has a standardized size according to the game specifications.
+     * 
+     * @param x The X-coordinate of the flag in the game world.
+     * @param y The Y-coordinate of the flag in the game world.
+     */
     public Flag(double x, double y) {
-        super(x, y, 20, 40); // Standardized to spec size
+        super(x, y, 20, 40); 
     }
 
+    /**
+     * Updates the flag's animation state.
+     * Advances the wave animation timer, creating a continuous
+     * waving motion effect. The animation cycles every 2π seconds.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds.
+     */
     @Override
     public void update(double deltaTime) {
-        // Update wave animation
         waveTime += deltaTime * waveSpeed;
         if (waveTime > Math.PI * 2) {
             waveTime -= Math.PI * 2;
         }
     }
 
+    /**
+     * Renders the flag on the screen.
+     * Creates a pole with a waving golden flag attached to it.
+     * The flag features a wave effect with sine functions and
+     * includes horizontal lines for detail. The flag is outlined
+     * in black to improve visibility from a distance.
+     * 
+     * @param gc The graphics context to draw on.
+     */
     @Override
     public void render(GraphicsContext gc) {
         if (!isActive) return;
         
         // Draw pole
-        gc.setFill(Color.web("#8B4513")); // Brown for pole
+        gc.setFill(Color.web("#8B4513")); 
         gc.fillRect(x, y, 5, height);
         
         // Draw waving flag
@@ -56,7 +88,7 @@ public class Flag extends GameObject {
         gc.fillPolygon(xPoints, yPoints, 4);
         
         // Add some flag details
-        gc.setStroke(Color.web("#FFD700", 0.7)); // Slightly transparent gold
+        gc.setStroke(Color.web("#FFD700", 0.7)); 
         gc.setLineWidth(1);
         gc.strokeLine(x + 10, y + 10, x + width - 5, y + 10);
         gc.strokeLine(x + 10, y + 20, x + width - 5, y + 20);

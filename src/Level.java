@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a game level containing all objects and environment elements.
+ * Manages collections of enemies, obstacles, coins, and decorative elements.
+ * Provides methods for updating, rendering, and querying level objects
+ * with performance optimizations for object culling.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
 public class Level {
     private int levelNumber;
     private List<Enemy> enemies;
@@ -17,6 +26,12 @@ public class Level {
     // Performance optimization
     private boolean debugMode = false;
 
+    /**
+     * Constructs a new level with the specified number.
+     * Initializes empty collections for level objects.
+     * 
+     * @param levelNumber The level number, which determines difficulty and content.
+     */
     public Level(int levelNumber) {
         this.levelNumber = levelNumber;
         this.enemies = new ArrayList<>();
@@ -26,18 +41,22 @@ public class Level {
         this.levelHeight = 720;
         this.levelWidth = 2000;
     }
-    
-    public void setDebugMode(boolean debug) {
-        this.debugMode = debug;
-    }
 
+    /**
+     * Initializes the level with basic environment elements.
+     * Called during level creation.
+     */
     public void initialize() {
-        // Add basic environment elements
         environmentObjects.add(new DesertElement(100, 650, 200, 50, ElementType.SAND_DUNE));
     }
-
+    
+    
+    /**
+     * Updates all game objects in the level.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds.
+     */
     public void update(double deltaTime) {
-        // Update all game objects
         for (Enemy enemy : enemies) enemy.update(deltaTime);
         for (Obstacle obstacle : obstacles) obstacle.update(deltaTime);
         for (GameObject envObj : environmentObjects) envObj.update(deltaTime);
@@ -45,6 +64,14 @@ public class Level {
         if (completionFlag != null) completionFlag.update(deltaTime);
     }
     
+    /**
+     * Updates game objects more efficiently by only updating objects near the player.
+     * Implements culling for performance optimization.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds.
+     * @param playerX The x-coordinate of the player.
+     * @param cullingDistance The maximum distance for objects to be updated.
+     */
     public void updateEfficiently(double deltaTime, double playerX, double cullingDistance) {
         for (Enemy enemy : enemies) {
             if (Math.abs(enemy.getX() - playerX) < cullingDistance) {
@@ -75,6 +102,14 @@ public class Level {
         if (completionFlag != null) completionFlag.update(deltaTime);
     }
     
+    /**
+     * Returns all active game objects that are near the player.
+     * Used for collision detection and rendering optimization.
+     * 
+     * @param playerX The x-coordinate of the player.
+     * @param cullingDistance The maximum distance for objects to be included.
+     * @return A list of game objects near the player.
+     */
     public List<GameObject> getObjectsNearPlayer(double playerX, double cullingDistance) {
         List<GameObject> nearby = new ArrayList<>();
         
@@ -105,6 +140,11 @@ public class Level {
         return nearby;
     }
 
+    /**
+     * Returns all game objects in the level.
+     * 
+     * @return A combined list of all game objects.
+     */
     public List<GameObject> getAllObjects() {
         List<GameObject> objects = new ArrayList<>();
         objects.addAll(enemies);
@@ -115,6 +155,14 @@ public class Level {
         return objects;
     }
     
+    /**
+     * Returns all visible game objects based on the camera position.
+     * Used for efficient rendering.
+     * 
+     * @param cameraX The x-coordinate of the camera.
+     * @param viewportWidth The width of the visible viewport.
+     * @return A list of visible game objects.
+     */
     public List<GameObject> getVisibleObjects(double cameraX, double viewportWidth) {
         List<GameObject> visible = new ArrayList<>();
         
@@ -151,11 +199,26 @@ public class Level {
         return visible;
     }
     
+    /**
+     * Determines if a game object is visible within the camera view.
+     * 
+     * @param obj The game object to check.
+     * @param cameraX The x-coordinate of the camera.
+     * @param viewportWidth The width of the visible viewport.
+     * @return True if the object is visible, false otherwise.
+     */
     private boolean isVisible(GameObject obj, double cameraX, double viewportWidth) {
         return !(obj.getX() + obj.getWidth() < cameraX || 
                 obj.getX() > cameraX + viewportWidth);
     }
 
+    /**
+     * Checks if the level is completed by the player.
+     * Level is completed when the player collides with the completion flag.
+     * 
+     * @param player The player object.
+     * @return True if the level is completed, false otherwise.
+     */
     public boolean isCompleted(Player player) {
         if (player == null || completionFlag == null) {
             return false;
@@ -229,11 +292,13 @@ public class Level {
         return activeCoins;
     }
     
-    // New method to fix the undeclared getObstacles() error
     public List<Obstacle> getObstacles() {
         return obstacles;
     }
 
+    /**
+     * The Method sets everything in the Level to null to ensure consistency.
+     */
     public void cleanup() {
         if (enemies != null) {
             enemies.clear();

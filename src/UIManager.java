@@ -1,3 +1,10 @@
+/**
+ * UI Manager class that handles all user interface elements in the game.
+ * Creates and manages menus, HUDs, dialogs and other visual components.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -23,27 +30,55 @@ public class UIManager {
     private boolean darkMode = true;
     private VBox hudContainer;
 
+    /**
+     * Constructs a new UIManager with the specified score manager.
+     * 
+     * @param scoreManager The score manager to use for updating score displays.
+     */
     public UIManager(ScoreManager scoreManager) {
         this.scoreManager = scoreManager;
     }
 
+    /**
+     * Sets the primary stage for displaying dialogs.
+     * 
+     * @param stage The primary stage.
+     */
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }
 
+    /**
+     * Sets the handler for game reset actions.
+     * 
+     * @param handler The event handler for reset game actions.
+     */
     public void setResetGameHandler(javafx.event.EventHandler<ActionEvent> handler) {
         this.resetGameHandler = handler;
     }
 
+    /**
+     * Sets the handler for continue game actions.
+     * 
+     * @param handler The event handler for continue game actions.
+     */
     public void setContinueHandler(javafx.event.EventHandler<ActionEvent> handler) {
         this.continueHandler = handler;
     }
 
+    /**
+     * Sets dark mode display setting.
+     * 
+     * @param darkMode True to enable dark mode, false otherwise.
+     */
     public void setDarkMode(boolean darkMode) {
         this.darkMode = darkMode;
         Platform.runLater(() -> updateUIColors());
     }
 
+    /**
+     * Updates UI colors based on dark mode setting.
+     */
     private void updateUIColors() {
         if (hudContainer == null) return;
 
@@ -52,6 +87,11 @@ public class UIManager {
         if (scoreText != null) scoreText.setFill(Color.BLACK);
     }
 
+    /**
+     * Creates the game menu bar.
+     * 
+     * @return The created menu bar.
+     */
     public MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
@@ -74,6 +114,12 @@ public class UIManager {
         return menuBar;
     }
 
+    /**
+     * Creates the heads-up display (HUD).
+     * 
+     * @param levelNumber The current level number.
+     * @return The created HUD container.
+     */
     public VBox createHUD(int levelNumber) {
         hudContainer = new VBox(10);
         hudContainer.setPadding(new Insets(10));
@@ -94,18 +140,26 @@ public class UIManager {
         scoreText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         scoreText.setFill(Color.BLACK); // Changed to black for better visibility
 
-        // Removed livesText from the UI
-
         statsRow.getChildren().addAll(heartContainer, scoreText);
         hudContainer.getChildren().addAll(levelPane, statsRow);
         updateUIColors();
         return hudContainer;
     }
 
+    /**
+     * Updates the score display.
+     * 
+     * @param score The score to display.
+     */
     public void updateScore(int score) {
         if (scoreText != null) scoreText.setText("SCORE: " + score);
     }
 
+    /**
+     * Updates the heart display based on player health.
+     * 
+     * @param health The number of hearts to display.
+     */
     public void updateHearts(int health) {
         if (heartContainer != null) {
             heartContainer.getChildren().clear();
@@ -115,6 +169,11 @@ public class UIManager {
         }
     }
 
+    /**
+     * Creates a heart shape for the health display.
+     * 
+     * @return A pane containing the heart shape.
+     */
     private Pane createHeart() {
         Pane heart = new Pane();
         heart.setPrefSize(30, 30);
@@ -135,14 +194,21 @@ public class UIManager {
         return heart;
     }
 
+    /**
+     * Updates the level display.
+     * 
+     * @param level The level number to display.
+     */
     public void updateLevel(int level) {
         if (levelText != null) levelText.setText("LEVEL " + level);
     }
 
     /**
-     * Shows a dialog when the player dies
-     * @param continueAction Action to execute if player chooses to continue
-     * @param quitAction Action to execute if player chooses to quit
+     * Shows a dialog when the player dies.
+     * 
+     * @param remainingHearts Number of hearts player has left.
+     * @param continueAction Action to execute if player chooses to continue.
+     * @param quitAction Action to execute if player chooses to quit.
      */
     public void showDeathDialog(int remainingHearts, Runnable continueAction, Runnable quitAction) {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -205,6 +271,13 @@ public class UIManager {
         dialog.showAndWait();
     }
 
+    /**
+     * Shows a game over dialog with the final score.
+     * 
+     * @param isWin Whether the player won or lost.
+     * @param finalScore The final score to display.
+     * @param lastLevel The last level reached.
+     */
     public void showGameOverDialog(boolean isWin, int finalScore, int lastLevel) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle(isWin ? "Level Complete!" : "Game Over");
@@ -267,10 +340,20 @@ public class UIManager {
         dialog.showAndWait();
     }
 
+    /**
+     * Shows a game over dialog with the final score.
+     * Overloaded method that doesn't include level information.
+     * 
+     * @param isWin Whether the player won or lost.
+     * @param finalScore The final score to display.
+     */
     public void showGameOverDialog(boolean isWin, int finalScore) {
         showGameOverDialog(isWin, finalScore, 1);
     }
 
+    /**
+     * Shows an about dialog with game and team information.
+     */
     public void showAboutDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("About Bedouin Madness");

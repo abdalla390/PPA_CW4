@@ -2,6 +2,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.geometry.Point2D;
 
+/**
+ * Player class representing the main character controlled by the user.
+ */
 public class Player extends GameObject {
     private float health = 3.0f;
     private double speed = 200;
@@ -15,7 +18,7 @@ public class Player extends GameObject {
     
     private boolean isDying = false;
     private double deathTimer = 0;
-    private double deathAnimationDuration = 1.0; // Reduced from 2.0 to 1.0 for faster animation
+    private double deathAnimationDuration = 1.0;
     private double rotationAngle = 0;
     private double fadeOut = 1.0;
     
@@ -37,14 +40,30 @@ public class Player extends GameObject {
         IDLE, RUNNING, JUMPING, DYING
     }
 
+    /**
+     * Creates a new player at the specified position.
+     * 
+     * @param x The x-coordinate of the player
+     * @param y The y-coordinate of the player
+     */
     public Player(double x, double y) {
         super(x, y, 30, 50);
     }
 
+    /**
+     * Sets the boundaries for player movement within the level.
+     * 
+     * @param levelWidth The width of the current level
+     */
     public void setLevelBounds(double levelWidth) {
         this.maxX = levelWidth - width;
     }
 
+    /**
+     * Updates the player's position and state.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds
+     */
     @Override
     public void update(double deltaTime) {
         if (!isActive) return;
@@ -123,13 +142,13 @@ public class Player extends GameObject {
             isJumping = false;
         }
         
-        long now = System.currentTimeMillis();
-        if (now - lastDebugOutput > 1000) {
-            lastDebugOutput = now;
-            DebugLogger.logPlayerState(this); // Log state for debugging
-        }
     }
     
+    /**
+     * Updates the death animation state.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds
+     */
     private void updateDeathAnimation(double deltaTime) {
         deathTimer += deltaTime;
         rotationAngle += deltaTime * 360;
@@ -139,10 +158,12 @@ public class Player extends GameObject {
         if (deathTimer >= deathAnimationDuration) {
             isDying = false;
             isActive = false;
-            DebugLogger.log("Player death animation completed"); // Added for debugging
         }
     }
 
+    /**
+     * Makes the player jump if not already jumping or dying.
+     */
     public void jump() {
         if (!isJumping && !isDying) {
             isJumping = true;
@@ -152,6 +173,9 @@ public class Player extends GameObject {
         }
     }
 
+    /**
+     * Moves the player to the left if not dying.
+     */
     public void moveLeft() { 
         if (!isDying) {
             targetSpeedX = -speed;
@@ -159,6 +183,9 @@ public class Player extends GameObject {
         }
     }
     
+    /**
+     * Moves the player to the right if not dying.
+     */
     public void moveRight() {
         if (!isDying) {
             targetSpeedX = speed;
@@ -166,12 +193,20 @@ public class Player extends GameObject {
         }
     }
     
+    /**
+     * Stops player movement if not dying.
+     */
     public void stopMoving() { 
         if (!isDying) {
             targetSpeedX = 0;
         }
     }
     
+    /**
+     * Applies damage to the player if not invincible or dying.
+     * 
+     * @param damage The amount of damage to apply
+     */
     public void takeDamage(float damage) { 
         if (!isInvincible && !isDying) {
             health -= damage; 
@@ -180,20 +215,18 @@ public class Player extends GameObject {
             isInvincible = true;
             invincibilityTimer = invincibilityDuration;
             
-            // Reduced knockback effect
             velocity = new Point2D(velocity.getX() * 0.3, -150);
             isJumping = true;
             
             if (health <= 0) {
                 startDeathAnimation();
-                DebugLogger.log("Player health depleted, starting death animation");
-            } else {
-                // Flash animation but don't disable player
-                DebugLogger.log("Player took damage, health: " + health);
             }
         }
     }
     
+    /**
+     * Starts the death animation sequence.
+     */
     public void startDeathAnimation() {
         isDying = true;
         deathTimer = 0;
@@ -202,12 +235,29 @@ public class Player extends GameObject {
         isJumping = true;
     }
     
+    /**
+     * Checks if the player is currently in dying state.
+     * 
+     * @return True if the player is dying, false otherwise
+     */
     public boolean isDying() {
         return isDying;
     }
     
-    public int getHealth() { return (int) Math.ceil(health); }
+    /**
+     * Gets the current health of the player.
+     * 
+     * @return The player's health as an integer (ceiling of health float value)
+     */
+    public int getHealth() { 
+        return (int) Math.ceil(health); 
+    }
     
+    /**
+     * Sets the player's health to the specified value.
+     * 
+     * @param health The new health value
+     */
     public void setHealth(float health) {
         this.health = health;
         if (health <= 0) {
@@ -215,6 +265,11 @@ public class Player extends GameObject {
         }
     }
 
+    /**
+     * Renders the player on the screen.
+     * 
+     * @param gc The graphics context to draw on
+     */
     @Override
     public void render(GraphicsContext gc) {
         if (!isActive) return;
@@ -252,6 +307,12 @@ public class Player extends GameObject {
         gc.restore();
     }
     
+    /**
+     * Draws the player character as a ninja.
+     * 
+     * @param gc The graphics context to draw on
+     * @param isMoving Whether the player is in a moving state
+     */
     private void drawSimpleNinja(GraphicsContext gc, boolean isMoving) {
         gc.setFill(Color.web("#C19A6B"));
         double drawX = x;
@@ -291,9 +352,48 @@ public class Player extends GameObject {
         gc.strokeOval(drawX + 5, y, width - 10, 20);
     }
 
-    public void setIsJumping(boolean jumping) { this.isJumping = jumping; }
-    public void setVelocity(Point2D velocity) { this.velocity = velocity; }
-    public Point2D getVelocity() { return velocity; }
-    public boolean isInvincible() { return isInvincible; }
-    public PlayerState getState() { return state; }
+    /**
+     * Sets the jumping state.
+     * 
+     * @param jumping The new jumping state
+     */
+    public void setIsJumping(boolean jumping) { 
+        this.isJumping = jumping; 
+    }
+    
+    /**
+     * Sets the velocity of the player.
+     * 
+     * @param velocity The new velocity vector
+     */
+    public void setVelocity(Point2D velocity) { 
+        this.velocity = velocity; 
+    }
+    
+    /**
+     * Gets the current velocity of the player.
+     * 
+     * @return The current velocity as a Point2D
+     */
+    public Point2D getVelocity() { 
+        return velocity; 
+    }
+    
+    /**
+     * Checks if the player is currently invincible.
+     * 
+     * @return True if the player is invincible, false otherwise
+     */
+    public boolean isInvincible() { 
+        return isInvincible; 
+    }
+    
+    /**
+     * Gets the current state of the player.
+     * 
+     * @return The current PlayerState
+     */
+    public PlayerState getState() { 
+        return state; 
+    }
 }

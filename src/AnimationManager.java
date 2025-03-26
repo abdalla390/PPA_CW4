@@ -4,33 +4,49 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnimationManager {
-    private static final Map<GameObject, Timeline> activeAnimations = new HashMap<>();
+/**
+ * Manages animations for game objects.
+ * Provides methods to create different types of animations for player and enemies,
+ * and handles cancellation and cleanup of active animations.
+ * 
+ * @author @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
 
+public class AnimationManager {
+    // Map to track all active animations with their associated game objects
+    private static final Map<GameObject, Timeline> activeAnimations = new HashMap<>();
+    
+    /**
+     * Creates a jump animation for the player.
+     * This animation temporarily makes the player invisible and then visible again
+     * to create a visual effect during jumps.
+     * 
+     * @param player The player object to animate.
+     */
     public static void createPlayerJumpAnimation(Player player) {
         try {
-            DebugLogger.log("Creating player jump animation");
             cancelExistingAnimation(player);
             
             Timeline timeline = new Timeline(
                 new KeyFrame(Duration.millis(100), e -> {
                     try {
                         player.setActive(false);
-                        DebugLogger.log("Player jump animation - setting active=false");
+                       
                     } catch (Exception ex) {
-                        DebugLogger.logException(ex);
+                        System.err.println("Exception" + ex.getMessage());
+                        ex.printStackTrace();
                     }
                 }),
                 new KeyFrame(Duration.millis(200), e -> {
                     try {
-                        if (!player.isDying()) { // Skip reactivation if dying
+                        if (!player.isDying()) { 
                             player.setActive(true);
-                            DebugLogger.log("Player jump animation - setting active=true");
-                        } else {
-                            DebugLogger.log("Player jump animation - player dying, skipping reactivation");
+                            
                         }
                     } catch (Exception ex) {
-                        DebugLogger.logException(ex);
+                        System.err.println("Exception" + ex.getMessage());
+                        ex.printStackTrace();
                     }
                 })
             );
@@ -41,17 +57,25 @@ public class AnimationManager {
             
             timeline.setOnFinished(e -> {
                 activeAnimations.remove(player);
-                DebugLogger.log("Player jump animation completed and removed from tracking");
             });
         } catch (Exception e) {
-            DebugLogger.logException(e);
-            // Ensure player is active even if animation fails
+            System.err.println("Exception" + e.getMessage());
+            e.printStackTrace();
+            
             if (player != null) {
                 player.setActive(true);
             }
         }
     }
-
+    
+    /**
+     * Creates an attack animation for an enemy.
+     * This animation briefly makes the enemy invisible and then visible again
+     * to create a visual "flash" effect during attacks.
+     * 
+     * @param enemy The enemy object to animate.
+     */
+    
     public static void createEnemyAttackAnimation(Enemy enemy) {
         try {
             cancelExistingAnimation(enemy);
@@ -67,32 +91,37 @@ public class AnimationManager {
             
             timeline.setOnFinished(e -> activeAnimations.remove(enemy));
         } catch (Exception e) {
-            DebugLogger.logException(e);
-            // Ensure enemy is active even if animation fails
+            System.err.println("Exception" + e.getMessage());
+            e.printStackTrace();
+            
             if (enemy != null) {
                 enemy.setActive(true);
             }
         }
     }
-
+    
+    /**
+     * Creates a death animation for a game object.
+     * For Player objects, this delegates to the player's own death animation.
+     * For other objects, it creates a simple animation that makes the object disappear.
+     * 
+     * @param object The game object to animate during its death.
+     */
+    
     public static void createDeathAnimation(GameObject object) {
         try {
-            DebugLogger.log("Creating death animation for " + object.getClass().getSimpleName());
             cancelExistingAnimation(object);
             
             if (object instanceof Player) {
                 Player player = (Player) object;
                 if (!player.isDying()) {
-                    DebugLogger.log("Starting player death animation via AnimationManager");
+                    
                     player.startDeathAnimation();
-                } else {
-                    DebugLogger.log("Player already dying, skipping AnimationManager death animation");
-                }
+                } 
             } else {
                 Timeline timeline = new Timeline(
                     new KeyFrame(Duration.millis(300), e -> {
                         object.setActive(false);
-                        DebugLogger.log("Death animation completed for " + object.getClass().getSimpleName());
                     })
                 );
                 
@@ -103,37 +132,45 @@ public class AnimationManager {
                 timeline.setOnFinished(e -> activeAnimations.remove(object));
             }
         } catch (Exception e) {
-            DebugLogger.logException(e);
+            System.err.println("Exception" + e.getMessage());
+            e.printStackTrace();
+            
             if (object != null) {
                 object.setActive(false);
             }
         }
     }
     
+     /**
+     * Cancels any existing animation for a game object.
+     * 
+     * @param object The game object whose animation should be cancelled.
+     */
     private static void cancelExistingAnimation(GameObject object) {
         try {
             Timeline existingAnimation = activeAnimations.get(object);
             if (existingAnimation != null) {
-                DebugLogger.log("Cancelling existing animation for " + 
-                               object.getClass().getSimpleName());
                 existingAnimation.stop();
                 activeAnimations.remove(object);
             }
         } catch (Exception e) {
-            DebugLogger.logException(e);
+            System.err.println("Exception" + e.getMessage());
+            e.printStackTrace();
         }
     }
     
+    /**
+     * Stops and removes all active animations.
+     */
     public static void cleanupAllAnimations() {
         try {
-            DebugLogger.log("Cleaning up all animations. Active count: " + activeAnimations.size());
             for (Timeline timeline : activeAnimations.values()) {
                 timeline.stop();
             }
             activeAnimations.clear();
-            DebugLogger.log("All animations cleaned up");
         } catch (Exception e) {
-            DebugLogger.logException(e);
+            System.err.println("Exception" + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -3,11 +3,29 @@ import javafx.scene.input.KeyCode;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Manages user input processing for the game.
+ * Handles keyboard events, tracks pressed keys, and translates
+ * user input into player actions like movement and jumping.
+ * Supports multiple simultaneous key presses for smooth control.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
 public class InputHandler {
     private final Set<KeyCode> pressedKeys = new HashSet<>();
+    
     private Player player;
+    
     private Scene scene;
     
+    /**
+     * Constructs a new input handler for the specified scene and player.
+     * Sets up event handlers for key press and release events.
+     * 
+     * @param scene The JavaFX scene to monitor for input events.
+     * @param player The player object to control based on input.
+     */
     public InputHandler(Scene scene, Player player) {
         this.player = player;
         this.scene = scene;
@@ -15,23 +33,20 @@ public class InputHandler {
         setupInputHandling();
     }
     
+    /**
+     * Sets up event handlers for key press and release events.
+     * Maps keyboard inputs to appropriate player actions.
+     */
     private void setupInputHandling() {
-        // Key press events
-        scene.setOnKeyPressed(event -> {
+         scene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
             pressedKeys.add(code);
             
-            // Handle immediate actions
-            if (code == KeyCode.SPACE && player != null) {
+            if ((code == KeyCode.SPACE || code == KeyCode.W || code == KeyCode.UP) && player != null) {
                 player.jump();
-            }
-            
-            if (debugMode()) {
-                System.out.println("Key pressed: " + code);
             }
         });
         
-        // Key release events
         scene.setOnKeyReleased(event -> {
             KeyCode code = event.getCode();
             pressedKeys.remove(code);
@@ -48,21 +63,24 @@ public class InputHandler {
                 player.stopMoving();
             }
             
-            if (debugMode()) {
-                System.out.println("Key released: " + code);
-            }
         });
     }
     
-    // Update player reference after restart
+    /**
+     * Updates the player reference after game restart or player reset.
+     * Ensures that input events control the current player instance.
+     * 
+     * @param player The new player instance to control.
+     */
     public void setPlayer(Player player) {
         this.player = player;
-        if (debugMode()) {
-            System.out.println("InputHandler player updated");
-        }
     }
     
-    // Update player movement based on currently pressed keys
+    /**
+     * Processes currently pressed keys and applies corresponding actions.
+     * Called each frame to handle continuous actions like movement.
+     * Supports simultaneous key presses (e.g., moving and jumping at the same time).
+     */
     public void processInput() {
         if (player == null || !player.isActive()) return; // Safety check
         
@@ -75,19 +93,15 @@ public class InputHandler {
         }
     }
     
-    // Clear all pressed keys and reset player state
+    /**
+     * Clears all pressed keys and resets player movement state.
+     * Useful when transitioning between game states or after dialog interactions.
+     */
     public void clearInputs() {
         pressedKeys.clear();
         if (player != null) {
             player.stopMoving();
         }
-        if (debugMode()) {
-            System.out.println("Input handler cleared!");
-        }
     }
     
-    // Helper method for debug output
-    private boolean debugMode() {
-        return false; // Change to true to enable input debugging
-    }
 }

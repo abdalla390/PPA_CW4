@@ -1,16 +1,52 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+
+/**
+ * Represents the static desert background of the game world.
+ * Draws the sky, ground, distant mountains, and ground line to create
+ * a cohesive desert environment for the game.
+ * 
+ * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
+ * @version 1.0
+ */
+
 public class DesertBackground extends GameObject {
+    /**
+     * Constructs a new desert background that covers the specified area.
+     * 
+     * @param x The X-coordinate of the background in the game world.
+     * @param y The Y-coordinate of the background in the game world.
+     * @param width The width of the background area.
+     * @param height The height of the background area.
+     */
+    
     public DesertBackground(double x, double y, double width, double height) {
         super(x, y, width, height);
     }
-
+    
+     /**
+     * Updates the background state.
+     * The background is static, so this method doesn't perform any actions.
+     * 
+     * @param deltaTime Time elapsed since the last update in seconds.
+     */
     @Override
     public void update(double deltaTime) {
         // Static background, no updates needed
     }
 
+    /**
+     * Renders the desert background on the screen.
+     * Creates a layered environment with:
+     * - A sky-blue upper section (86% of height)
+     * - A sand-colored ground section (14% of height)
+     * - A dividing line where the ground meets the sky
+     * - Distant mountain silhouettes for depth and atmosphere
+     * 
+     * @param gc The graphics context to draw on.
+     */
+    
     @Override
     public void render(GraphicsContext gc) {
         if (!isActive) return;
