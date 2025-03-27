@@ -3,9 +3,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Represents the completion flag that marks the end of a level.
- * When the player collides with this flag, the level is considered
- * complete and the player advances to the next level. The flag
- * features an animated waving effect to attract player attention.
+ * The flag features an animated waving effect to attract player attention.
  * 
  * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
  * @version 1.0

@@ -109,29 +109,61 @@ public class GameView {
      * @param level The current level being rendered.
      */
     private void drawBackground(Level level) {
-        // Use a more efficient background rendering method
-        
-        // Sky (fixed, doesn't move with camera)
-        gc.setFill(Color.web("#87CEEB")); // Sky blue
+        // Sky
+        gc.setFill(Color.web("#87CEEB")); 
         gc.fillRect(camera.getX(), 0, gameCanvas.getWidth(), gameCanvas.getHeight() * 0.86);
         
-        // Distant mountains (slow parallax) - only draw what's visible
         double parallaxFactor = 0.4;
-        double mountainOffset = camera.getX() * parallaxFactor;
-        gc.setFill(Color.web("#808080", 0.5)); // Light gray mountains
+        double duneOffset = camera.getX() * parallaxFactor;
         
-        // Draw only visible mountain ranges
-        int start = (int)(mountainOffset / 500) - 1;
+        // Draw only visible dune ranges
+        int start = (int)(duneOffset / 500) - 1;
         int end = start + (int)(gameCanvas.getWidth() / 500) + 2;
         
         for (int i = start; i < end; i++) {
-            double baseX = i * 500 - (mountainOffset % 500);
-            gc.fillPolygon(
-                new double[]{baseX, baseX + 250, baseX + 500},
-                new double[]{620, 450, 620},
-                3
+            double baseX = i * 500 - (duneOffset % 500);
+            
+            // First sand dune (darker)
+            gc.setFill(Color.web("#D4B483", 0.7));  
+            gc.beginPath();
+            gc.moveTo(baseX, 620);
+            gc.bezierCurveTo(
+                baseX + 125, 520,
+                baseX + 375, 520, 
+                baseX + 500, 620  
             );
-        }
+            gc.lineTo(baseX + 500, 620);
+            gc.lineTo(baseX, 620);
+            gc.closePath();
+            gc.fill();
+            
+            // Add a subtle highlight for depth
+            gc.setStroke(Color.web("#F5DEB3", 0.3));
+            gc.setLineWidth(1);
+            gc.beginPath();
+            gc.moveTo(baseX + 100, 590);
+            gc.quadraticCurveTo(
+                baseX + 250, 540,
+                baseX + 400, 590
+            );
+            gc.stroke();
+            
+            // Smaller overlapping dune with slightly different color for variety
+            if (i % 2 == 0) {
+                gc.setFill(Color.web("#C19A6B", 0.5)); 
+                gc.beginPath();
+                gc.moveTo(baseX + 150, 620);
+                gc.bezierCurveTo(
+                    baseX + 250, 570, 
+                    baseX + 350, 570, 
+                    baseX + 450, 620  
+                );
+                gc.lineTo(baseX + 450, 620);
+                gc.lineTo(baseX + 150, 620);
+                gc.closePath();
+                gc.fill();
+                }
+            }
         
         // Ground (moves with camera)
         gc.setFill(Color.web("#E9C893")); // Sand color
@@ -139,7 +171,7 @@ public class GameView {
                     gameCanvas.getWidth(), gameCanvas.getHeight() * 0.14);
         
         // Ground line - only draw what's visible
-        gc.setStroke(Color.web("#A69185")); // Darker line for ground
+        gc.setStroke(Color.web("#A69185")); 
         gc.setLineWidth(2);
         gc.strokeLine(camera.getX(), gameCanvas.getHeight() * 0.86, 
                     camera.getX() + gameCanvas.getWidth(), gameCanvas.getHeight() * 0.86);

@@ -106,7 +106,7 @@ public class LevelFactory {
         double spacing = levelWidth / (enemyCount + 1);
         for (int i = 0; i < enemyCount; i++) {
             double x = spacing * (i + 1);
-            level.addEnemy(enemyFactory.createEnemyForLevel(levelNumber, x, 570));
+            level.addEnemy(enemyFactory.createEnemyForLevel(levelNumber, x, 585));
         }
     }
     

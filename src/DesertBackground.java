@@ -52,31 +52,70 @@ public class DesertBackground extends GameObject {
         if (!isActive) return;
         
         // Sky
-        gc.setFill(Color.web("#87CEEB")); // Sky blue
-        gc.fillRect(x, y, width, height * 0.86); // Sky takes up 86% of the height
+        gc.setFill(Color.web("#87CEEB")); 
+        gc.fillRect(x, y, width, height * 0.86);
         
         // Ground
-        gc.setFill(Color.web("#E9C893")); // Sand color
-        gc.fillRect(x, y + height * 0.86, width, height * 0.14); // Ground is the bottom 14%
+        gc.setFill(Color.web("#E9C893")); 
+        gc.fillRect(x, y + height * 0.86, width, height * 0.14); 
         
-        // Ground line - make it clear where the ground level is
-        gc.setStroke(Color.web("#A69185")); // Darker line for ground
+        gc.setStroke(Color.web("#A69185")); 
         gc.setLineWidth(2);
         gc.strokeLine(x, y + height * 0.86, x + width, y + height * 0.86);
         
-        // Add some details to the background
-        // Distant mountains
-        gc.setFill(Color.web("#808080", 0.5)); // Light gray mountains
-        gc.fillPolygon(
-            new double[]{x + width * 0.1, x + width * 0.2, x + width * 0.3},
-            new double[]{y + height * 0.86, y + height * 0.7, y + height * 0.86},
-            3
+        // First sand dune
+        gc.setFill(Color.web("#D4B483", 0.7)); 
+        double dune1X = x + width * 0.1;
+        double dune1Width = width * 0.3;
+        double dune1Height = height * 0.15;
+        drawSandDune(gc, dune1X, y + height * 0.86 - dune1Height, dune1Width, dune1Height);
+        
+        // Second sand dune 
+        gc.setFill(Color.web("#E9C893", 0.6)); 
+        double dune2X = x + width * 0.5;
+        double dune2Width = width * 0.4;
+        double dune2Height = height * 0.2;
+        drawSandDune(gc, dune2X, y + height * 0.86 - dune2Height, dune2Width, dune2Height);
+        
+        // Third smaller dune
+        gc.setFill(Color.web("#C19A6B", 0.5)); 
+        double dune3X = x + width * 0.35;
+        double dune3Width = width * 0.2;
+        double dune3Height = height * 0.1;
+        drawSandDune(gc, dune3X, y + height * 0.86 - dune3Height, dune3Width, dune3Height);
+    }
+    
+    private void drawSandDune(GraphicsContext gc, double x, double y, double width, double height) {
+        // Use bezier curves for a smoother, more natural dune shape
+        gc.beginPath();
+        gc.moveTo(x, y + height); 
+        
+        // Create a curve for the dune
+        gc.bezierCurveTo(
+            x + width * 0.3, y + height * 0.5,
+            x + width * 0.7, y + height * 0.5, 
+            x + width, y + height              
         );
         
-        gc.fillPolygon(
-            new double[]{x + width * 0.5, x + width * 0.7, x + width * 0.9},
-            new double[]{y + height * 0.86, y + height * 0.65, y + height * 0.86},
-            3
+        // Complete the shape
+        gc.lineTo(x + width, y + height);
+        gc.lineTo(x, y + height);
+        gc.closePath();
+        gc.fill();
+        
+        // Add a subtle highlight line to give some depth
+        gc.setStroke(Color.web("#F5DEB3", 0.3)); 
+        gc.setLineWidth(1);
+        
+        // Draw a subtle curve near the top of the dune for highlight
+        gc.beginPath();
+        gc.moveTo(x + width * 0.1, y + height * 0.7);
+        gc.quadraticCurveTo(
+            x + width * 0.5, y + height * 0.4,
+            x + width * 0.9, y + height * 0.7
         );
+        gc.stroke();
     }
+    
+    
 }
