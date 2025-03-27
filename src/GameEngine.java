@@ -2,7 +2,10 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.List;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1884543 (Initial commit - added project files)
 /**
  * The core engine responsible for running the game loop and managing game state.
  * Handles initialization, updates, collision detection, player death,
@@ -25,7 +28,11 @@ public class GameEngine {
     private boolean isPaused = false;
     private boolean debugMode = false;
     private long lastUpdate = 0;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 1884543 (Initial commit - added project files)
     /**
      * Constructs a new game engine with the specified components.
      * Links the engine to the UI, score system, graphics context, and view.
@@ -42,7 +49,11 @@ public class GameEngine {
         this.gameView = gameView;
     }
 
+<<<<<<< HEAD
      /**
+=======
+    /**
+>>>>>>> 1884543 (Initial commit - added project files)
      * Initializes the game state for a new game.
      * Creates the player, first level, and starts the score timer.
      * Updates UI elements to reflect the initial state.
@@ -54,11 +65,18 @@ public class GameEngine {
         scoreManager.startLevelTimer();
         uiManager.updateHearts(player.getHealth());
         uiManager.updateLevel(currentLevel.getLevelNumber());
+<<<<<<< HEAD
         uiManager.updateScore(scoreManager.getCurrentScore());
         startGameLoop();
     }
     
     
+=======
+        uiManager.updateScore(scoreManager.getTotalScore()); 
+        startGameLoop();
+    }
+
+>>>>>>> 1884543 (Initial commit - added project files)
     /**
      * Starts the main game loop using JavaFX AnimationTimer.
      * The loop handles input processing, game state updates,
@@ -94,21 +112,33 @@ public class GameEngine {
             player.update(deltaTime);
             currentLevel.updateEfficiently(deltaTime, player.getX(), 1280);
             handleCollisions();
+<<<<<<< HEAD
             uiManager.updateScore(scoreManager.getCurrentScore());
         } else if (player.isDying()) {
             player.update(deltaTime); 
         } else if (!player.isActive() && !player.isDying()) {
             
+=======
+            uiManager.updateScore(scoreManager.getTotalScore()); // Fix: Use total score
+        } else if (player.isDying()) {
+            player.update(deltaTime); 
+        } else if (!player.isActive() && !player.isDying()) {
+>>>>>>> 1884543 (Initial commit - added project files)
             pauseGame();
             handlePlayerDeath();
         }
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 1884543 (Initial commit - added project files)
     /**
      * Handles all collision detection between the player and game objects.
      * Processes interactions with enemies, obstacles, coins, and level completion flags.
      * Triggers appropriate actions based on collision types.
      */
+<<<<<<< HEAD
     private void handleCollisions() {
         List<GameObject> nearbyObjects = currentLevel.getObjectsNearPlayer(player.getX(), 1280);
         for (GameObject obj : nearbyObjects) {
@@ -137,10 +167,55 @@ public class GameEngine {
             if (obstacle instanceof MovingPlatform && player.collidesWith(obstacle)) {
                 player.setVelocity(player.getVelocity().add(((MovingPlatform) obstacle).getVelocity()));
                 player.setY(obstacle.getY() - player.getHeight());
+=======
+    /**
+ * Handles all collision detection between the player and game objects.
+ * Processes interactions with enemies, obstacles, coins, and level completion flags.
+ * Triggers appropriate actions based on collision types.
+ */
+/**
+ * Handles all collision detection between the player and game objects.
+ * Processes interactions with enemies, obstacles, coins, and level completion flags.
+ * Triggers appropriate actions based on collision types.
+ */
+private void handleCollisions() {
+    List<GameObject> nearbyObjects = currentLevel.getObjectsNearPlayer(player.getX(), 1280);
+    for (GameObject obj : nearbyObjects) {
+        if (player.collidesWith(obj)) {
+            if (obj instanceof Enemy) {
+                ((Enemy) obj).attack(player);
+                uiManager.updateHearts(player.getHealth());
+                uiManager.updateScore(scoreManager.getTotalScore()); // Keep UI update for consistency
+            } else if (obj instanceof Obstacle && ((Obstacle) obj).isDamaging()) {
+                player.takeDamage(1.0f);
+                uiManager.updateHearts(player.getHealth());
+                uiManager.updateScore(scoreManager.getTotalScore()); // Keep UI update for consistency
+            } else if (obj instanceof Coin) {
+                Coin coin = (Coin) obj;
+                if (!coin.isCollected()) {
+                    coin.collect();
+                    scoreManager.addScore(coin.getType() == Coin.CoinType.GOLD ? 10 : 1);
+                    uiManager.updateScore(scoreManager.getTotalScore()); // Immediate score update
+                }
+            } else if (obj instanceof Flag) {
+                advanceToNextLevel();
+>>>>>>> 1884543 (Initial commit - added project files)
             }
         }
     }
 
+<<<<<<< HEAD
+=======
+    // Platform-specific collision (for moving platforms)
+    for (Obstacle obstacle : currentLevel.getObstacles()) {
+        if (obstacle instanceof MovingPlatform && player.collidesWith(obstacle)) {
+            player.setVelocity(player.getVelocity().add(((MovingPlatform) obstacle).getVelocity()));
+            player.setY(obstacle.getY() - player.getHeight());
+        }
+    }
+}
+
+>>>>>>> 1884543 (Initial commit - added project files)
     /**
      * Handles the player death sequence.
      * Determines remaining hearts, displays the appropriate dialog,
@@ -150,6 +225,7 @@ public class GameEngine {
         // Get current health to determine remaining hearts
         int remainingHearts = player.getHealth() - 1;
         AnimationManager.cleanupAllAnimations(); // Prevent animation-related freezes
+<<<<<<< HEAD
         
         if (remainingHearts > 0) {
             // Show death dialog with remaining hearts
@@ -163,11 +239,27 @@ public class GameEngine {
                         showGameOver(false);
                     });
             });
+=======
+
+        if (remainingHearts > 0) {
+            // Show death dialog with remaining hearts
+            javafx.application.Platform.runLater(() -> {
+                        uiManager.showDeathDialog(remainingHearts, 
+                            () -> {
+                                    resetPlayer();
+                                    resumeGame();
+                            }, 
+                            () -> {
+                                    showGameOver(false);
+                            });
+                });
+>>>>>>> 1884543 (Initial commit - added project files)
         } else {
             showGameOver(false);
         }
     }
 
+<<<<<<< HEAD
     
     // Modified resetPlayer method with optional health parameter
     private void resetPlayer(float healthValue) {
@@ -185,11 +277,32 @@ public class GameEngine {
      * Resets the player to the starting position with current health.
      * Called after death if the player has remaining hearts.
      * Applies score penalties and updates UI accordingly.
+=======
+    // Modified resetPlayer method with optional health parameter
+
+    private void resetPlayer(float healthValue) {
+        player = new Player(100, 570);
+        player.setLevelBounds(currentLevel.getLevelWidth());
+        player.setHealth(healthValue);
+        inputHandler.setPlayer(player);
+        uiManager.updateHearts(player.getHealth());
+        uiManager.updateScore(scoreManager.getTotalScore()); // Fix: Use total score
+    }
+
+    /**
+     * Resets the player to the starting position with current health.
+     * Called after death if the player has remaining hearts.
+     * public void applyDamagePenalty() {
+>>>>>>> 1884543 (Initial commit - added project files)
      */
     private void resetPlayer() {
         resetPlayer(3.0f);
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 1884543 (Initial commit - added project files)
     /**
      * Advances the game to the next level after completing the current one.
      * Calculates level score, creates a new level, resets player position,
@@ -203,7 +316,11 @@ public class GameEngine {
         player.setLevelBounds(currentLevel.getLevelWidth());
         scoreManager.startLevelTimer();
         uiManager.updateLevel(currentLevel.getLevelNumber());
+<<<<<<< HEAD
         uiManager.updateScore(scoreManager.getCurrentScore());
+=======
+        uiManager.updateScore(scoreManager.getTotalScore()); 
+>>>>>>> 1884543 (Initial commit - added project files)
     }
 
     /**
@@ -212,6 +329,7 @@ public class GameEngine {
      * 
      * @param isWin True if the player completed all levels, false if they died.
      */
+<<<<<<< HEAD
     
     private void showGameOver(boolean isWin) {
         
@@ -228,6 +346,24 @@ public class GameEngine {
             uiManager.showGameOverDialog(isWin, scoreToShow, currentLevel.getLevelNumber());
             resetGame();
         });
+=======
+
+    private void showGameOver(boolean isWin) {
+
+        int finalScore = scoreManager.getFinalScore();
+        if (isWin) {
+
+            scoreManager.calculateLevelScore();
+            finalScore = scoreManager.getTotalScore();
+        }
+
+        final int scoreToShow = finalScore;
+
+        javafx.application.Platform.runLater(() -> {
+                    uiManager.showGameOverDialog(isWin, scoreToShow, currentLevel.getLevelNumber());
+                    resetGame();
+            });
+>>>>>>> 1884543 (Initial commit - added project files)
     }
 
     /**

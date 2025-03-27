@@ -78,6 +78,7 @@ public class ScoreManager {
         }
     }
     
+<<<<<<< HEAD
     /**
      * Applies a score penalty when player takes damage.
      */
@@ -92,6 +93,8 @@ public class ScoreManager {
             currentScore = 0;
         }
     }
+=======
+>>>>>>> 1884543 (Initial commit - added project files)
 
     /**
      * Gets the total score including current level score.

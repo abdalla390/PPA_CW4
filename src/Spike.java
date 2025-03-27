@@ -2,7 +2,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
+<<<<<<< HEAD
  * Spike obstacle that damages the player on contact.
+=======
+ * Spike is red obstacle that damages the player on contact.
+>>>>>>> 1884543 (Initial commit - added project files)
  * 
  * @author Abdalla Alhajeri, Mohamed Alketbi, Ali Alharmoodi, Abdelrahman Almatrooshi, Hussain Albeshri
  * @version 1.0
@@ -36,7 +40,11 @@ public class Spike extends Obstacle {
     @Override
     public void render(GraphicsContext gc) {
         if (!isActive) return;
+<<<<<<< HEAD
         gc.setFill(Color.web("#A69185")); // Gray-brown
+=======
+        gc.setFill(Color.web("#D22F27")); 
+>>>>>>> 1884543 (Initial commit - added project files)
         gc.fillPolygon(
             new double[]{x, x + width / 2, x + width},
             new double[]{y + height, y, y + height},
