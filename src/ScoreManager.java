@@ -35,17 +35,13 @@ public class ScoreManager {
      */
     public int calculateLevelScore() {
         long timeSpent = (System.currentTimeMillis() - levelStartTime) / 1000;
-        int timeBonus = Math.max(0, 500 - (int)(timeSpent * 10)); // Time bonus reduced by 10 points per second
+        int timeBonus = Math.max(0, 500 - (int)(timeSpent * 10)); 
         
         // Add time bonus to current level score
         int levelScore = currentScore + timeBonus;
         
         // Add the level score to total score
         totalScore += levelScore;
-        
-        System.out.println("Level completed! Current level score: " + currentScore + 
-                         " + Time bonus: " + timeBonus + " = Total level score: " + levelScore);
-        System.out.println("Overall total score: " + totalScore);
         
         // Reset current level score for the next level
         currentScore = 0;
@@ -85,10 +81,8 @@ public class ScoreManager {
         // If player has 5 or more coins, take 5 points
         if (currentScore >= 5) {
             currentScore -= 5;
-            System.out.println("Applied 5-point damage penalty. New score: " + currentScore);
         } else {
             // If less than 5 coins, take whatever is available
-            System.out.println("Not enough coins for damage penalty. Current score: " + currentScore);
             currentScore = 0;
         }
     }
