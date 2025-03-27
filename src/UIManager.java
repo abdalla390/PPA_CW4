@@ -123,10 +123,10 @@ public class UIManager {
     public VBox createHUD(int levelNumber) {
         hudContainer = new VBox(10);
         hudContainer.setPadding(new Insets(10));
-
+                               
         levelText = new Text("LEVEL " + levelNumber);
         levelText.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        levelText.setFill(Color.BLACK); // Changed to black for better visibility
+        levelText.setFill(Color.BLACK);
         StackPane levelPane = new StackPane(levelText);
         levelPane.setAlignment(Pos.CENTER);
 
@@ -138,7 +138,7 @@ public class UIManager {
 
         scoreText = new Text("SCORE: 0");
         scoreText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        scoreText.setFill(Color.BLACK); // Changed to black for better visibility
+        scoreText.setFill(Color.BLACK); 
 
         statsRow.getChildren().addAll(heartContainer, scoreText);
         hudContainer.getChildren().addAll(levelPane, statsRow);

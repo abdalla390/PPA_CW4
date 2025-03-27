@@ -23,8 +23,6 @@ public class Level {
     private double levelHeight;
     private GameObject completionFlag;
     
-    // Performance optimization
-    private boolean debugMode = false;
 
     /**
      * Constructs a new level with the specified number.
@@ -224,15 +222,7 @@ public class Level {
             return false;
         }
         
-        if (debugMode && Math.random() < 0.01) {
-            System.out.println("Checking completion: Player (" + player.getX() + "," + player.getY() + 
-                             "), Flag (" + completionFlag.getX() + "," + completionFlag.getY() + ")");
-        }
-        
         boolean colliding = player.collidesWith(completionFlag);
-        if (colliding && debugMode) {
-            System.out.println("*** LEVEL COMPLETED - Player touched flag! ***");
-        }
         
         return colliding;
     }
@@ -278,8 +268,6 @@ public class Level {
             coins = new ArrayList<>();
         }
         coins.add(coin);
-        System.out.println("Added " + (coin.getType() == Coin.CoinType.GOLD ? "gold" : "silver") + 
-                         " coin at position: (" + coin.getX() + ", " + coin.getY() + ")");
     }
     
     public List<Coin> getActiveCoins() {
