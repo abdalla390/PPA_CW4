@@ -36,7 +36,7 @@ public class Spike extends Obstacle {
     @Override
     public void render(GraphicsContext gc) {
         if (!isActive) return;
-        gc.setFill(Color.web("#A69185")); // Gray-brown
+        gc.setFill(Color.web("#D22F27")); 
         gc.fillPolygon(
             new double[]{x, x + width / 2, x + width},
             new double[]{y + height, y, y + height},

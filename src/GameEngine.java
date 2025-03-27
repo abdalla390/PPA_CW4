@@ -2,7 +2,6 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.List;
 
-
 /**
  * The core engine responsible for running the game loop and managing game state.
  * Handles initialization, updates, collision detection, player death,
@@ -42,7 +41,7 @@ public class GameEngine {
         this.gameView = gameView;
     }
 
-     /**
+    /**
      * Initializes the game state for a new game.
      * Creates the player, first level, and starts the score timer.
      * Updates UI elements to reflect the initial state.
@@ -54,10 +53,9 @@ public class GameEngine {
         scoreManager.startLevelTimer();
         uiManager.updateHearts(player.getHealth());
         uiManager.updateLevel(currentLevel.getLevelNumber());
-        uiManager.updateScore(scoreManager.getCurrentScore());
+        uiManager.updateScore(scoreManager.getTotalScore()); 
         startGameLoop();
     }
-    
     
     /**
      * Starts the main game loop using JavaFX AnimationTimer.
@@ -94,11 +92,10 @@ public class GameEngine {
             player.update(deltaTime);
             currentLevel.updateEfficiently(deltaTime, player.getX(), 1280);
             handleCollisions();
-            uiManager.updateScore(scoreManager.getCurrentScore());
+            uiManager.updateScore(scoreManager.getTotalScore());
         } else if (player.isDying()) {
             player.update(deltaTime); 
         } else if (!player.isActive() && !player.isDying()) {
-            
             pauseGame();
             handlePlayerDeath();
         }
@@ -116,15 +113,18 @@ public class GameEngine {
                 if (obj instanceof Enemy) {
                     ((Enemy) obj).attack(player);
                     uiManager.updateHearts(player.getHealth());
+                    uiManager.updateScore(scoreManager.getTotalScore());
                 } else if (obj instanceof Obstacle && ((Obstacle) obj).isDamaging()) {
                     player.takeDamage(1.0f);
                     scoreManager.applyDamagePenalty();
                     uiManager.updateHearts(player.getHealth());
+                    uiManager.updateScore(scoreManager.getTotalScore());
                 } else if (obj instanceof Coin) {
                     Coin coin = (Coin) obj;
                     if (!coin.isCollected()) {
                         coin.collect();
                         scoreManager.addScore(coin.getType() == Coin.CoinType.GOLD ? 10 : 1);
+                        uiManager.updateScore(scoreManager.getTotalScore());
                     }
                 } else if (obj instanceof Flag) {
                     advanceToNextLevel();
@@ -167,21 +167,23 @@ public class GameEngine {
             showGameOver(false);
         }
     }
-
     
-    // Modified resetPlayer method with optional health parameter
+    /**
+     * Reset player with specified health value.
+     * 
+     * @param healthValue The health value to set for the player.
+     */
     private void resetPlayer(float healthValue) {
         player = new Player(100, 570);
         player.setLevelBounds(currentLevel.getLevelWidth());
-        // Set the health to the provided value instead of using default
         player.setHealth(healthValue);
         inputHandler.setPlayer(player);
         scoreManager.applyDamagePenalty();
         uiManager.updateHearts(player.getHealth());
-        uiManager.updateScore(scoreManager.getCurrentScore());
+        uiManager.updateScore(scoreManager.getTotalScore());
     }
 
-     /**
+    /**
      * Resets the player to the starting position with current health.
      * Called after death if the player has remaining hearts.
      * Applies score penalties and updates UI accordingly.
@@ -203,7 +205,7 @@ public class GameEngine {
         player.setLevelBounds(currentLevel.getLevelWidth());
         scoreManager.startLevelTimer();
         uiManager.updateLevel(currentLevel.getLevelNumber());
-        uiManager.updateScore(scoreManager.getCurrentScore());
+        uiManager.updateScore(scoreManager.getTotalScore());
     }
 
     /**
@@ -212,12 +214,9 @@ public class GameEngine {
      * 
      * @param isWin True if the player completed all levels, false if they died.
      */
-    
     private void showGameOver(boolean isWin) {
-        
         int finalScore = scoreManager.getFinalScore();
         if (isWin) {
-            
             scoreManager.calculateLevelScore();
             finalScore = scoreManager.getTotalScore();
         }
@@ -244,7 +243,7 @@ public class GameEngine {
      */
     public void resumeGame() {
         isPaused = false;
-        lastUpdate = 0; // Reset delta time
+        lastUpdate = 0; 
     }
 
     /**

@@ -24,7 +24,6 @@ public class ScoreManager {
      */
     public void startLevelTimer() {
         levelStartTime = System.currentTimeMillis();
-        // Don't reset current level score here
     }
 
     /**
@@ -37,13 +36,10 @@ public class ScoreManager {
         long timeSpent = (System.currentTimeMillis() - levelStartTime) / 1000;
         int timeBonus = Math.max(0, 500 - (int)(timeSpent * 10)); 
         
-        // Add time bonus to current level score
         int levelScore = currentScore + timeBonus;
         
-        // Add the level score to total score
         totalScore += levelScore;
         
-        // Reset current level score for the next level
         currentScore = 0;
         
         return levelScore;
@@ -56,7 +52,6 @@ public class ScoreManager {
      * @return The final score without time bonus.
      */
     public int getFinalScore() {
-        // For game over, just add current score to total without time bonus
         return totalScore + currentScore;
     }
     
@@ -68,7 +63,6 @@ public class ScoreManager {
     public void addScore(int points) {
         currentScore += points;
         
-        // Ensure score doesn't go negative
         if (currentScore < 0) {
             currentScore = 0;
         }
@@ -78,11 +72,9 @@ public class ScoreManager {
      * Applies a score penalty when player takes damage.
      */
     public void applyDamagePenalty() {
-        // If player has 5 or more coins, take 5 points
         if (currentScore >= 5) {
             currentScore -= 5;
         } else {
-            // If less than 5 coins, take whatever is available
             currentScore = 0;
         }
     }
@@ -93,7 +85,7 @@ public class ScoreManager {
      * @return The total score.
      */
     public int getTotalScore() { 
-        return totalScore + currentScore; // Include current level score in total
+        return totalScore + currentScore; 
     }
     
     /**
