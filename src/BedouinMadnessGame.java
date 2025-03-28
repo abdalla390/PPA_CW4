@@ -27,6 +27,7 @@ public class BedouinMadnessGame extends Application {
         ScoreManager scoreManager = new ScoreManager();
         uiManager = new UIManager(scoreManager);
         uiManager.setPrimaryStage(stage);
+        uiManager.setApplicationShutdownHandler(() -> shutdownApplication());
         
         // Create GameView first (but don't set GameEngine yet)
         gameView = new GameView(canvas, null);
@@ -151,6 +152,31 @@ public class BedouinMadnessGame extends Application {
         if (gameEngine != null) {
             gameEngine.kill();
         }
+    }
+    
+    /**
+     * Handles the proper shutdown sequence for the game application.
+     * This method ensures that all game resources are properly cleaned up 
+     * before exiting. It first terminates the game engine, then safely exits
+     * the JavaFX platform on the correct thread.
+     * 
+     * The method uses Platform.runLater to ensure the exit occurs on the
+     * JavaFX Application Thread, preventing threading issues. If the clean
+     * exit fails, it falls back to a forced System.exit(0).
+     */
+    public void shutdownApplication() {
+    
+        stop();
+    
+        javafx.application.Platform.runLater(() -> {
+        try {
+            // Clean exit from the platform
+            javafx.application.Platform.exit();
+        } catch (Exception e) {
+            // Fallback if clean exit fails
+            System.exit(0);
+            }
+        });
     }
 
     public static void main(String[] args) {
