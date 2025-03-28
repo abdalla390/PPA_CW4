@@ -29,6 +29,7 @@ public class UIManager {
     private javafx.event.EventHandler<ActionEvent> continueHandler;
     private boolean darkMode = true;
     private VBox hudContainer;
+    private Runnable applicationShutdownHandler;
 
     /**
      * Constructs a new UIManager with the specified score manager.
@@ -101,7 +102,7 @@ public class UIManager {
             });
 
         MenuItem quitItem = new MenuItem("Quit");
-        quitItem.setOnAction(e -> Platform.exit());
+        quitItem.setOnAction(e -> applicationShutdownHandler.run());
 
         fileMenu.getItems().addAll(newGameItem, new SeparatorMenuItem(), quitItem);
 
@@ -324,7 +325,7 @@ public class UIManager {
         quitButton.setStyle("-fx-font-size: 16px; -fx-padding: 8 16; -fx-background-color: #f0f0f0;");
         quitButton.setOnAction(e -> {
                     dialogPane.getScene().getWindow().hide();
-                    Platform.exit();
+                    applicationShutdownHandler.run();
             });
 
         buttonBox.getChildren().addAll(playAgainButton, quitButton);
@@ -382,5 +383,9 @@ public class UIManager {
         dialogPane.setContent(content);
         dialogPane.getButtonTypes().add(ButtonType.OK);
         dialog.showAndWait();
+    }
+    
+    public void setApplicationShutdownHandler(Runnable handler) {
+        this.applicationShutdownHandler = handler;
     }
 }
